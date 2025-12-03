@@ -21,13 +21,6 @@ Currently implementing core security testing features.
 - Cucumber (BDD)
 - Maven
 - JUnit 5
-
-## 👤 Author
-
-**Samet ARI**
-- LinkedIn: [linkedin.com/in/sametari](https://linkedin.com/in/sametari)
-- Email: sametari14@gmail.com
-
 ---
 
 ⚡ More documentation coming soon!
