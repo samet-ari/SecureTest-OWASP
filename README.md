@@ -16,7 +16,7 @@ Currently implementing core security testing features.
 
 ## 🛠️ Technologies
 
-- Java 11+
+- Java 11
 - Selenium WebDriver
 - Cucumber (BDD)
 - Maven
