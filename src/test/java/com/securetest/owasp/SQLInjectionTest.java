@@ -9,6 +9,8 @@ public class SQLInjectionTest extends BaseTest {
     
     @Test
     public void testSQLInjectionOnLoginForm() {
+        long startTime = System.currentTimeMillis();
+        
         navigateTo("http://testphp.vulnweb.com/login.php");
         
         System.out.println("\n========================================");
@@ -17,16 +19,15 @@ public class SQLInjectionTest extends BaseTest {
         System.out.println("========================================\n");
         
         try {
-            // Locator'ları tanımla
             By formLocator = By.tagName("form");
             By usernameInput = By.name("uname");
             By submitButton = By.cssSelector("input[type='submit']");
             
-            // Scanner oluştur ve test et
             SQLInjectionScanner scanner = new SQLInjectionScanner(driver);
             List<String> vulnerabilities = scanner.scanForm(formLocator, usernameInput, submitButton);
             
-            // Sonuçları raporla
+            long duration = System.currentTimeMillis() - startTime;
+            
             System.out.println("\n========== SCAN RESULTS ==========");
             System.out.println("Payloads tested: 3");
             System.out.println("Vulnerabilities found: " + scanner.getVulnerabilityCount());
@@ -34,20 +35,28 @@ public class SQLInjectionTest extends BaseTest {
             if (!vulnerabilities.isEmpty()) {
                 System.out.println("\n[CRITICAL] SQL Injection vulnerabilities detected:");
                 for (String vuln : vulnerabilities) {
-                    System.out.println("    " + vuln);
+                    System.out.println("  - " + vuln);
                 }
             } else {
-                System.out.println("\n No SQL Injection vulnerabilities detected.");
+                System.out.println("\nNo SQL Injection vulnerabilities detected.");
             }
             System.out.println("==================================\n");
             
-            // Test başarılı
+            // Generate HTML Report
+            String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+            String reportPath = "reports/security-scan-" + timestamp + ".html";
+            
+            HTMLReporter reporter = new HTMLReporter(reportPath);
+            reporter.generateReport(driver.getCurrentUrl(), vulnerabilities, 3, duration);
+            
+            System.out.println("📊 HTML Report: " + reportPath);
+            
             assertTrue(true, "SQL Injection test completed successfully");
             
         } catch (Exception e) {
-            System.err.println(" Error during test: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
-            fail("Test failed with exception: " + e.getMessage());
+            fail("Test failed: " + e.getMessage());
         }
     }
 }
